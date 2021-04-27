@@ -46,7 +46,7 @@ void test_mem() {
     a = 4;
     b0 = 0x0a;
     b1 = 0xcb;
-    w = 0xcd0a;
+    w = 0xcb0a;
     w_write(a, w);
     byte b0res = b_read(a);
     byte b1res = b_read(a + 1);
