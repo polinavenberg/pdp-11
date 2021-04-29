@@ -2,13 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "pdp11.h"
 
-# define MEMSIZE (64*1024)
-typedef unsigned char byte; //8 bit
-typedef unsigned short int word; //16 bit
-typedef word adr; //16 bit
 
-byte mem[MEMSIZE];
 
 void b_write(adr a, byte b);
 
