@@ -2,23 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
-# define MEMSIZE (64*1024)
-typedef unsigned char byte; //8 bit
-typedef unsigned short int word; //16 bit
-typedef word adr; //16 bit
-
-byte mem[MEMSIZE];
-
-void b_write(adr a, byte b);
-
-byte b_read(adr a);
-
-void w_write(adr a, word w);
-
-word w_read(adr a);
+#include "pdp11.h"
 
 void load_file();
+
+void mem_dump(adr start, word n);
 
 void test_mem() {
     // пишем байт, читаем байт
@@ -57,40 +45,17 @@ void test_mem() {
 }
 
 
-void w_write(adr a, word w) {
-    //выдает сообщение об ошибке, если передан адрес не первого(четного) байта
-    assert(a % 2 == 0);
-    mem[a] = (byte) ((w << 8) >> 8);
-    mem[a + 1] = (byte) (w >> 8);
-}
-
-
-word w_read(adr a) {
-    word w = ((word) mem[a + 1]) << 8;
-    w = w | mem[a];
-    return w;
-
-}
-
-byte b_read(adr a) {
-    return mem[a];
-}
-
-void b_write(adr a, byte b) {
-    mem[a] = b;
-}
-
-
-void load_file() {
+void load_file(const char * filename) {
     adr start;
     int i;
     word n;
-    while (feof(stdin) != 1) {
-        fscanf(stdin, "%hx", &start);
-        fscanf(stdin, "%hx", &n);
+    FILE *fl = fopen(filename, "r");
+    while (fscanf(fl, "%hx", &start) != EOF) {
+        fscanf(fl, "%hx", &n);
         for (i = 0; i < n; i++) {
             byte b;
-            fscanf(stdin, "%hhx", &mem[start + i]);
+            fscanf(fl, "%hhx", &b);
+            b_write(start + i, b);
         }
     }
 
