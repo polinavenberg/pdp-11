@@ -10,16 +10,11 @@ typedef word adr; //16 bit
 #define ostat 0177564
 #define odata 0177566
 
-byte mem[MEMSIZE];
-word reg[REG_SIZE];
 
 typedef struct{
     word val;
     word adr;
 } Args;
-
-Args ss, dd, b_flag, r, nn, xx, rn;
-char N_flag, Z_flag, V_flag, C_flag;
 
 
 typedef struct {

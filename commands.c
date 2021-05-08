@@ -3,6 +3,11 @@
 #include <stdlib.h>
 
 
+extern byte mem[MEMSIZE];
+extern word reg[REG_SIZE];
+extern Args ss, dd, b_flag, r, nn, xx, rn;
+extern char N_flag, Z_flag, V_flag, C_flag;
+
 void set_NZ(word w) {
     if (w >> 15) {
         Z_flag = 0;

@@ -6,6 +6,10 @@
 
 extern int T_flag;
 extern int t_flag;
+extern byte mem[MEMSIZE];
+extern word reg[REG_SIZE];
+extern Args ss, dd, b_flag, r, nn, xx, rn;
+extern char N_flag, Z_flag, V_flag, C_flag;
 
 void trace(const char *format, ...) {
     if (T_flag) {

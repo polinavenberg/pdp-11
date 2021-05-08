@@ -5,8 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+byte mem[MEMSIZE];
+word reg[REG_SIZE];
+
+Args ss, dd, b_flag, r, nn, xx, rn;
+char N_flag, Z_flag, V_flag, C_flag;
+
+
 int t_flag = 0; //флаг для трессировки
 int T_flag = 0; //флаг для большой трессировки
+
 
 void test_mem() {
     // пишем байт, читаем байт

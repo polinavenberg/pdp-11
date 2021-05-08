@@ -2,6 +2,11 @@
 #include "pdp11.h"
 #include <stdlib.h>
 
+extern byte mem[MEMSIZE];
+extern word reg[REG_SIZE];
+extern Args ss, dd, b_flag, r, nn, xx, rn;
+extern char N_flag, Z_flag, V_flag, C_flag;
+
 
 extern Command cmd[];
 extern int cmd_len;
