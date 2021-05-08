@@ -1,12 +1,12 @@
+#include "pdp11.h"
+#include <assert.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-#include "pdp11.h"
 
-void load_file();
-
-void mem_dump(adr start, word n);
+int t_flag = 0; //флаг для трессировки
+int T_flag = 0; //флаг для большой трессировки
 
 void test_mem() {
     // пишем байт, читаем байт
@@ -45,33 +45,21 @@ void test_mem() {
 }
 
 
-void load_file(const char * filename) {
-    adr start;
-    int i;
-    word n;
-    FILE *fl = fopen(filename, "r");
-    while (fscanf(fl, "%hx", &start) != EOF) {
-        fscanf(fl, "%hx", &n);
-        for (i = 0; i < n; i++) {
-            byte b;
-            fscanf(fl, "%hhx", &b);
-            b_write(start + i, b);
+int main(int argc, char *argv[])
+{
+    for (int i = 1; i < argc; i++) {
+        if (argv[i][0] == '-') {
+            if (argv[i][1] == 't')
+                t_flag = 1;
+            else if (argv[i][1] == 'T')
+                T_flag = 1;
         }
+        else
+            load_file(argv[i]);
     }
-
-}
-
-
-void mem_dump(adr start, word n) {
-    word w;
-    for (int i = 0; i < n; i += 2) {
-        w = w_read(start + i);
-        printf("%06o : %06o\n", start + i, w);
-    }
-}
-
-
-int main() {
-    test_mem();
+   // print_mem(01000, 01100);
+    trace("\n");
+    run();
+    print_reg();
     return 0;
 }
