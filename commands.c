@@ -21,6 +21,19 @@ void set_NZ(word w) {
     }
 }
 
+void set_NZb(byte b) {
+    if (b >> 7) {
+        Z_flag = 0;
+        N_flag = 1;
+    } else {
+        N_flag = 0;
+        if (b == 0)
+            Z_flag = 1;
+        else
+            Z_flag = 0;
+    }
+}
+
 void set_ALL(int w) {
     set_NZ(w);
     C_flag = (w >> 16) & 1;
@@ -35,11 +48,14 @@ void do_halt() {
 }
 
 void do_mov() {
-    if (b_flag.val)
+    if (b_flag.val) {
         b_write(dd.adr, (byte) ss.val);
-    else
+        set_NZb((byte)ss.val);
+    }
+    else {
         w_write(dd.adr, ss.val);
-    set_NZ(w_read(dd.adr));
+        set_NZ(ss.val);
+    }
     if ((dd.adr == odata) && ((w_read(ostat) >> 7) & 1)) //putchar
         printf("%c", ss.val);
 }
@@ -164,16 +180,7 @@ void do_nothing() {
 void tst() { //если b_flag 1, то это байт и делаем то, что прописано в тст, иначе это слово и делаем set_NZ
     //и выставляем C и V нулями
     if (b_flag.val) {
-        if ((dd.val >> 7) & 1) {
-            Z_flag = 0;
-            N_flag = 1;
-        } else {
-            N_flag = 0;
-            if (dd.val == 0)
-                Z_flag = 1;
-            else
-                Z_flag = 0;
-        }
+        set_NZb(dd.val);
     } else
         set_NZ(dd.val);
     C_flag = 0;
@@ -199,32 +206,32 @@ void rts(){
 // 2 - SS
 // 3 - SS and DD
 Command cmd[] = {
-        {0177777, 0000000, "halt", do_halt, 0},
-        {0070000, 0010000, "mov", do_mov, 3},
-        {0170000, 0060000, "add", do_add, 3},
-        {0077700, 0005000, "clr", do_clr, 1},
-        {0177000, 0077000, "sob", do_sob, 0},
-        {0177777, 0000250, "cln", cln, 0},
-        {0177777, 0000244, "clz", clz, 0},
-        {0177777, 0000242, "clv", clv, 0},
-        {0177777, 0000241, "clc", clc, 0},
-        {0177777, 0000257, "ccc", ccc, 0},
-        {0177777, 0000270, "sen", sen, 0},
-        {0177777, 0000264, "sez", sez, 0},
-        {0177777, 0000262, "sev", sev, 0},
-        {0177777, 0000261, "sec", sec, 0},
-        {0177777, 0000277, "scc", scc, 0},
-        {0177400, 0000400, "br", br, 0},
-        {0177400, 0001400, "beq", beq, 0},
-        {0177400, 0001000, "bne", bne, 0},
-        {0177400, 0100400, "bmi", bmi, 0},
-        {0177400, 0100000, "bpl", bpl, 0},
-        {0177400, 0002400, "blt", blt, 0},
-        {0177400, 0002000, "bge", bge, 0},
-        {0177400, 0003400, "ble", ble, 0},
-        {0077700, 0005700, "tst", tst, 1},
-        {0177000, 0004000, "jsr", jsr, 1},
-        {0177770, 0000200, "rts", rts, 0},
+        {0177777, 0000000, "halt", do_halt, HAS_NOTHING},
+        {0070000, 0010000, "mov", do_mov, HAS_SS_DD},
+        {0170000, 0060000, "add", do_add, HAS_SS_DD},
+        {0077700, 0005000, "clr", do_clr, HAS_DD},
+        {0177000, 0077000, "sob", do_sob, HAS_NOTHING},
+        {0177777, 0000250, "cln", cln, HAS_NOTHING},
+        {0177777, 0000244, "clz", clz, HAS_NOTHING},
+        {0177777, 0000242, "clv", clv, HAS_NOTHING},
+        {0177777, 0000241, "clc", clc, HAS_NOTHING},
+        {0177777, 0000257, "ccc", ccc, HAS_NOTHING},
+        {0177777, 0000270, "sen", sen, HAS_NOTHING},
+        {0177777, 0000264, "sez", sez, HAS_NOTHING},
+        {0177777, 0000262, "sev", sev, HAS_NOTHING},
+        {0177777, 0000261, "sec", sec, HAS_NOTHING},
+        {0177777, 0000277, "scc", scc, HAS_NOTHING},
+        {0177400, 0000400, "br", br, HAS_NOTHING},
+        {0177400, 0001400, "beq", beq, HAS_NOTHING},
+        {0177400, 0001000, "bne", bne, HAS_NOTHING},
+        {0177400, 0100400, "bmi", bmi, HAS_NOTHING},
+        {0177400, 0100000, "bpl", bpl, HAS_NOTHING},
+        {0177400, 0002400, "blt", blt, HAS_NOTHING},
+        {0177400, 0002000, "bge", bge, HAS_NOTHING},
+        {0177400, 0003400, "ble", ble, HAS_NOTHING},
+        {0077700, 0005700, "tst", tst, HAS_DD},
+        {0177000, 0004000, "jsr", jsr, HAS_DD},
+        {0177770, 0000200, "rts", rts, HAS_NOTHING},
         {0000000, 0000000, "nothing", do_nothing, 0}
 
 

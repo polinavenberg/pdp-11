@@ -9,6 +9,10 @@ typedef word adr; //16 bit
 #define REG_SIZE 8
 #define ostat 0177564
 #define odata 0177566
+#define HAS_DD 1
+#define HAS_SS 2
+#define HAS_SS_DD 3
+#define HAS_NOTHING 0
 
 
 typedef struct{
